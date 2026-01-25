@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Finance Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1 class="app-title">finance</h1>
+                <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#/overview" class="nav-link" data-route="overview" data-action="nav-overview">
+                    <span class="nav-icon">OV</span>
+                    <span class="nav-text">Overview</span>
+                </a>
+                <a href="#/transactions" class="nav-link" data-route="transactions" data-action="nav-transactions">
+                    <span class="nav-icon">TX</span>
+                    <span class="nav-text">Transactions</span>
+                </a>
+                <a href="#/budgets" class="nav-link" data-route="budgets" data-action="nav-budgets">
+                    <span class="nav-icon">BG</span>
+                    <span class="nav-text">Budgets</span>
+                </a>
+                <a href="#/pots" class="nav-link" data-route="pots" data-action="nav-pots">
+                    <span class="nav-icon">PT</span>
+                    <span class="nav-text">Pots</span>
+                </a>
+                <a href="#/recurring" class="nav-link" data-route="recurring" data-action="nav-recurring">
+                    <span class="nav-icon">RC</span>
+                    <span class="nav-text">Recurring</span>
+                </a>
+                <a href="#/settings" class="nav-link" data-route="settings" data-action="nav-settings">
+                    <span class="nav-icon">ST</span>
+                    <span class="nav-text">Settings</span>
+                </a>
+                <div style="margin-top: auto; padding: var(--spacing-md);">
+                    <button class="btn-secondary" id="logoutBtn" style="width: 100%;">
+                        Logout
+                    </button>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-container">
+                <!-- Login Page -->
+                <div id="page-login" class="page">
+                    <div class="login-container">
+                        <div class="login-card">
+                            <h2>Welcome Back</h2>
+                            <p class="login-subtitle">Sign in to your account</p>
+                            <form id="loginForm">
+                                <div class="form-group">
+                                    <label for="loginEmail">Email</label>
+                                    <input type="email" id="loginEmail" required autocomplete="email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="loginPassword">Password</label>
+                                    <input type="password" id="loginPassword" required autocomplete="current-password">
+                                </div>
+                                <button type="submit" class="btn-primary" style="width: 100%; margin-top: var(--spacing-md);">
+                                    Sign In
+                                </button>
+                            </form>
+                            <p class="login-switch">
+                                Don't have an account? <a href="#/register" id="registerLink">Sign up</a>
+                            </p>
+                            <div id="loginError" class="error-message" style="display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Register Page -->
+                <div id="page-register" class="page hidden">
+                    <div class="login-container">
+                        <div class="login-card">
+                            <h2>Create Account</h2>
+                            <p class="login-subtitle">Start managing your finances</p>
+                            <form id="registerForm">
+                                <div class="form-group">
+                                    <label for="registerName">Name</label>
+                                    <input type="text" id="registerName" required autocomplete="name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerEmail">Email</label>
+                                    <input type="email" id="registerEmail" required autocomplete="email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="registerPassword">Password</label>
+                                    <input type="password" id="registerPassword" required autocomplete="new-password" minlength="6">
+                                </div>
+                                <button type="submit" class="btn-primary" style="width: 100%; margin-top: var(--spacing-md);">
+                                    Create Account
+                                </button>
+                            </form>
+                            <p class="login-switch">
+                                Already have an account? <a href="#/login" id="loginLink">Sign in</a>
+                            </p>
+                            <div id="registerError" class="error-message" style="display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Overview Page -->
+                <div id="page-overview" class="page hidden">
+                    <div class="page-header">
+                        <h2>Overview</h2>
+                    </div>
+                    <!-- Top Row: Three Summary Cards -->
+                    <div class="overview-grid" id="overviewSummaryCards">
+                        <!-- Will be populated by JS -->
+                    </div>
+                    <!-- Mid Row: Pots and Budgets -->
+                    <div class="overview-grid-mid">
+                        <div id="overviewPotsCard">
+                            <!-- Will be populated by JS -->
+                        </div>
+                        <div id="overviewBudgetsCard">
+                            <!-- Will be populated by JS -->
+                        </div>
+                    </div>
+                    <!-- Bottom Row: Transactions and Recurring -->
+                    <div class="overview-grid-bottom">
+                        <div id="overviewTransactionsCard">
+                            <!-- Will be populated by JS -->
+                        </div>
+                        <div id="overviewRecurringCard">
+                            <!-- Will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transactions Page -->
+                <div id="page-transactions" class="page hidden">
+                    <div class="page-header">
+                        <h2>Transactions</h2>
+                    </div>
+                    <div class="transactions-controls">
+                        <input type="text" class="search-input" id="transactionSearch" placeholder="Search by name or category...">
+                        <select class="filter-select" id="transactionSort">
+                            <option value="newest">Newest</option>
+                            <option value="oldest">Oldest</option>
+                            <option value="highest">Highest Amount</option>
+                            <option value="lowest">Lowest Amount</option>
+                        </select>
+                        <select class="filter-select" id="transactionCategoryFilter">
+                            <option value="all">All Categories</option>
+                        </select>
+                        <button class="btn-primary" data-action="open-add-transaction">+ Add Transaction</button>
+                    </div>
+                    <div class="card">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Category</th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactionsTableBody">
+                                    <!-- Transactions will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pagination" id="transactionsPagination">
+                            <!-- Pagination will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Budgets Page -->
+                <div id="page-budgets" class="page hidden">
+                    <div class="page-header">
+                        <h2>Budgets</h2>
+                        <button class="btn-primary" data-action="open-add-budget">+ Add Budget</button>
+                    </div>
+                    <div class="budgets-container">
+                        <div class="budgets-chart-container">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Budget Overview</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div id="budgetsDonutChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="budgets-list-container">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Categories</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div id="budgetsList">
+                                        <!-- Budget list will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pots Page -->
+                <div id="page-pots" class="page hidden">
+                    <div class="page-header">
+                        <h2>Pots</h2>
+                        <button class="btn-primary" data-action="open-add-pot">+ Add Pot</button>
+                    </div>
+                    <div class="cards-grid" id="potsGrid">
+                        <!-- Pot cards will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Recurring Page -->
+                <div id="page-recurring" class="page hidden">
+                    <div class="page-header">
+                        <h2>Recurring Bills</h2>
+                        <button class="btn-primary" data-action="open-add-recurring">+ Add Bill</button>
+                    </div>
+                    <div class="recurring-summary-cards" id="recurringSummaryCards">
+                        <!-- Summary cards will be populated here -->
+                    </div>
+                    <div class="transactions-controls" id="recurringControls">
+                        <input type="text" id="recurringSearch" class="search-input" placeholder="Search bills...">
+                        <select id="recurringSort" class="filter-select">
+                            <option value="date-asc">Due Date (Soonest)</option>
+                            <option value="date-desc">Due Date (Latest)</option>
+                            <option value="amount-asc">Amount (Lowest)</option>
+                            <option value="amount-desc">Amount (Highest)</option>
+                            <option value="name-asc">Name (A-Z)</option>
+                            <option value="name-desc">Name (Z-A)</option>
+                        </select>
+                    </div>
+                    <div class="card">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Due Date</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recurringTableBody">
+                                    <!-- Recurring items will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div id="page-settings" class="page hidden">
+                    <div class="page-header">
+                        <h2>Settings</h2>
+                    </div>
+                    
+                    <!-- Theme Settings -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Appearance</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="settings-item">
+                                <div class="settings-label">
+                                    <label for="themeToggle">Dark Mode</label>
+                                    <span class="settings-description">Switch between light and dark theme</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="themeToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Management -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Data Management</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="settings-item">
+                                <div class="settings-label">
+                                    <label>Export Data</label>
+                                    <span class="settings-description">Download your data as JSON file</span>
+                                </div>
+                                <button class="btn-secondary" id="exportDataBtn">Export Data</button>
+                            </div>
+                            <div class="settings-item">
+                                <div class="settings-label">
+                                    <label>Import Data</label>
+                                    <span class="settings-description">Import data from JSON file</span>
+                                </div>
+                                <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+                                    <input type="file" id="importDataInput" accept=".json" style="display: none;">
+                                    <button class="btn-secondary" id="importDataBtn">Choose File</button>
+                                    <span id="importFileName" style="color: var(--muted); font-size: var(--font-size-sm);"></span>
+                                </div>
+                            </div>
+                            <div class="settings-item">
+                                <div class="settings-label">
+                                    <label>Clear All Data</label>
+                                    <span class="settings-description">Permanently delete all your data</span>
+                                </div>
+                                <button class="btn-secondary danger" id="clearDataBtn">Clear All Data</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Management -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Categories</h3>
+                            <button class="btn-primary" id="addCategoryBtn">+ Add Category</button>
+                        </div>
+                        <div class="card-content">
+                            <div id="categoriesList">
+                                <!-- Categories will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Trends -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Monthly Spending Trends</h3>
+                        </div>
+                        <div class="card-content">
+                            <canvas id="monthlyTrendsChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Overlay for mobile sidebar -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Create Pot Modal -->
+    <div class="modal" id="createPotModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Pot</h3>
+                <button class="modal-close" data-action="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createPotForm" data-action="submit-add-pot">
+                    <div class="form-group">
+                        <label for="potName">Name</label>
+                        <input type="text" id="potName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="potTarget">Target</label>
+                        <input type="number" id="potTarget" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="potInitialSaved">Initial Saved (optional)</label>
+                        <input type="number" id="potInitialSaved" step="0.01" min="0" value="0">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" data-action="close-modal">Cancel</button>
+                        <button type="submit" class="btn-primary">Create Pot</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Withdraw Money Modal -->
+    <div class="modal" id="potMoneyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="potMoneyModalTitle">Add Money</h3>
+                <button class="modal-close" data-action="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="potMoneyForm" data-action="submit-pot-money">
+                    <input type="hidden" id="potMoneyId">
+                    <input type="hidden" id="potMoneyAction">
+                    <div class="form-group">
+                        <label for="potMoneyPotSelect">Pot</label>
+                        <select id="potMoneyPotSelect" required>
+                            <option value="">Select a pot</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="potMoneyAmount">Amount</label>
+                        <input type="number" id="potMoneyAmount" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" data-action="close-modal">Cancel</button>
+                        <button type="submit" class="btn-primary" id="savePotMoneyBtn">Confirm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Recurring Bill Modal -->
+    <div class="modal" id="addRecurringBillModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Recurring Bill</h3>
+                <button class="modal-close" data-action="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="recurringBillForm" data-action="submit-add-recurring">
+                    <div class="form-group">
+                        <label for="recurringBillName">Name</label>
+                        <input type="text" id="recurringBillName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="recurringBillAmount">Amount</label>
+                        <input type="number" id="recurringBillAmount" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="recurringBillDueDate">Due Date</label>
+                        <input type="date" id="recurringBillDueDate" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" data-action="close-modal">Cancel</button>
+                        <button type="submit" class="btn-primary">Add Bill</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Budget Modal -->
+    <div class="modal" id="budgetModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="budgetModalTitle">Add Budget</h3>
+                <button class="modal-close" data-action="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="budgetForm" data-action="submit-add-budget">
+                    <input type="hidden" id="budgetEditId">
+                    <div class="form-group">
+                        <label for="budgetCategory">Category</label>
+                        <input type="text" id="budgetCategory" list="budgetCategoryList" required>
+                        <datalist id="budgetCategoryList"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label for="budgetLimit">Limit</label>
+                        <input type="number" id="budgetLimit" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="budgetColor">Color</label>
+                        <div class="color-input-group">
+                            <input type="color" id="budgetColor" value="#6366f1">
+                            <input type="text" id="budgetColorText" value="#6366f1" pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" data-action="close-modal">Cancel</button>
+                        <button type="submit" class="btn-primary" id="saveBudgetBtn">Save Budget</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Transaction Modal -->
+    <div class="modal" id="addTransactionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Transaction</h3>
+                <button class="modal-close" data-action="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="transactionForm" data-action="submit-add-transaction">
+                    <div class="form-group">
+                        <label for="transactionName">Name</label>
+                        <input type="text" id="transactionName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="transactionAmount">Amount</label>
+                        <div class="amount-input-group">
+                            <select id="transactionAmountType" class="amount-type-select">
+                                <option value="-">-</option>
+                                <option value="+">+</option>
+                            </select>
+                            <input type="number" id="transactionAmount" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="transactionDate">Date</label>
+                        <input type="date" id="transactionDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="transactionCategory">Category</label>
+                        <input type="text" id="transactionCategory" list="categoryList" required>
+                        <datalist id="categoryList"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label for="transactionNotes">Notes (optional)</label>
+                        <textarea id="transactionNotes" rows="3" placeholder="Add any additional notes..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" data-action="close-modal">Cancel</button>
+                        <button type="submit" class="btn-primary">Add Transaction</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Root -->
+    <div id="modal-root"></div>
+
+    <script src="data/sample-data.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
